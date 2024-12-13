@@ -20,6 +20,8 @@ export default function Navigation() {
                 src="/logo.jpg"
                 alt="Based Thanks Logo"
                 className="h-14 w-14 rounded-full"
+                width={56}
+                height={56}
               />
               <div className="flex hidden items-center md:block">
                 <span className="text-2xl font-bold text-gray-200">Based</span>

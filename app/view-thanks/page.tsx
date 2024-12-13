@@ -1,6 +1,6 @@
 'use client';
 
-import { Identity, Name } from '@coinbase/onchainkit/identity';
+import { Address, Identity, Name } from '@coinbase/onchainkit/identity';
 import { useEffect, useState } from 'react';
 import { baseSepolia } from 'viem/chains';
 
@@ -19,31 +19,50 @@ export default function ViewThanks() {
   const [praiseEvents, setPraiseEvents] = useState<PraiseEvent[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [finalSearchQuery, setFinalSearchQuery] = useState('');
+
   const [blockLookbackWindow, setBlockLookbackWindow] =
     useState<string>('10000');
 
-  useEffect(() => {
-    async function fetchLogsAsync() {
-      if (Number(blockLookbackWindow) > 0) {
-        const logs = await fetchLogs({
-          blockLookbackWindow: Number(blockLookbackWindow),
-        });
-        const events = logs?.map((log) => log.args);
-        if (events) {
-          setPraiseEvents(events);
-        }
+  async function fetchLogsAsync() {
+    if (Number(blockLookbackWindow) > 0) {
+      const logs = await fetchLogs({
+        blockLookbackWindow: Number(blockLookbackWindow),
+      });
+      const events = logs?.map((log) => log.args);
+      if (events) {
+        setPraiseEvents(events);
+        return events;
       }
     }
-    fetchLogsAsync();
-  }, [blockLookbackWindow]);
+    return undefined;
+  }
 
-  const filteredEvents = praiseEvents
-    .filter(
-      (event) =>
-        event.sender?.toLowerCase().includes(finalSearchQuery.toLowerCase()) ||
-        event.recipient?.toLowerCase().includes(finalSearchQuery.toLowerCase())
-    )
-    .sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
+  useEffect(() => {
+    fetchLogsAsync();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSubmit = () => {
+    async function asyncHandler() {
+      const events = await fetchLogsAsync();
+      if (!events) {
+        return;
+      }
+      const filteredEvents = events
+        .filter(
+          (event) =>
+            event.sender
+              ?.toLowerCase()
+              .includes(finalSearchQuery.toLowerCase()) ||
+            event.recipient
+              ?.toLowerCase()
+              .includes(finalSearchQuery.toLowerCase())
+        )
+        .sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
+      setPraiseEvents(filteredEvents);
+    }
+    asyncHandler();
+  };
 
   const handleBlur = async () => {
     if (searchQuery.endsWith('.eth')) {
@@ -67,7 +86,7 @@ export default function ViewThanks() {
       <main className="mx-auto w-full max-w-6xl py-8">
         <div className="space-y-6">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-            Contract Events
+            Past Gratitude
           </h1>
 
           <div className="space-y-4">
@@ -82,7 +101,7 @@ export default function ViewThanks() {
                 type="text"
                 id="search"
                 className="w-96 rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400"
-                placeholder="Enter the wallet address or full Basename..."
+                placeholder="Wallet address or full Basename..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
@@ -105,8 +124,10 @@ export default function ViewThanks() {
               </label>
               <input
                 id="blockLookback"
-                className={`mb-1 mt-2 w-96 rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 ${
-                  Number(blockLookbackWindow) > 0 ? '' : 'dark:text-red-800'
+                className={`mb-1 mt-2 w-96 rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:focus:border-blue-400 ${
+                  Number(blockLookbackWindow) > 0
+                    ? 'dark:text-white'
+                    : 'dark:text-red-800'
                 }`}
                 placeholder="Enter number of blocks to look back..."
                 value={blockLookbackWindow}
@@ -114,10 +135,17 @@ export default function ViewThanks() {
                   setBlockLookbackWindow(e.target.value);
                 }}
               />
+
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 Note: large lookback windows may cause the request to fail.
               </p>
             </div>
+            <button
+              className="w-36 rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-600 dark:hover:bg-blue-700"
+              onClick={handleSubmit}
+            >
+              Search
+            </button>
           </div>
 
           <div className="flex flex-col divide-y overflow-hidden rounded-lg border border-gray-200 bg-white dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-900">
@@ -128,10 +156,10 @@ export default function ViewThanks() {
                     <div className="w-48 min-w-48 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
                       Date
                     </div>
-                    <div className="w-48 min-w-48 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    <div className="w-56 min-w-56 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
                       From
                     </div>
-                    <div className="w-48 min-w-48 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    <div className="w-56 min-w-56 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
                       To
                     </div>
                     <div className="w-48 min-w-48 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
@@ -144,7 +172,7 @@ export default function ViewThanks() {
                 </div>
 
                 <div className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
-                  {filteredEvents.map((event, index) => (
+                  {praiseEvents.map((event, index) => (
                     <div
                       key={index}
                       className="flex gap-2 hover:bg-gray-50 dark:hover:bg-gray-800"
@@ -162,20 +190,22 @@ export default function ViewThanks() {
                             })
                           : '-'}
                       </div>
-                      <div className="w-48 min-w-48 whitespace-nowrap px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
+                      <div className="w-56 min-w-56 whitespace-nowrap px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
                         <Identity
                           address={event.sender}
                           className="m-0 items-start bg-transparent p-0"
                         >
-                          <Name className="-ml-3 inline-block max-w-[160px] truncate p-0" />
+                          <Name className="-ml-3 inline-block max-w-[215px] truncate p-0" />
+                          <Address className="-ml-3" />
                         </Identity>
                       </div>
-                      <div className="w-48 min-w-48 whitespace-nowrap px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
+                      <div className="w-56 min-w-56 whitespace-nowrap px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
                         <Identity
                           address={event.recipient}
                           className="m-0 items-start bg-transparent p-0"
                         >
-                          <Name className="-ml-3 inline-block max-w-[160px] truncate p-0" />
+                          <Name className="-ml-3 inline-block max-w-[215px] truncate p-0" />
+                          <Address className="-ml-3" />
                         </Identity>
                       </div>
                       <div className="w-48 min-w-48 whitespace-nowrap px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
