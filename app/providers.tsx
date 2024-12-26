@@ -42,7 +42,7 @@ export function Providers({ children }: { children: ReactNode }) {
             preference: smartWalletOnly ? 'smartWalletOnly' : 'all',
           }),
         ],
-        ssr: true,
+        ssr: false,
         transports: {
           [baseSepolia.id]: http(),
         },
