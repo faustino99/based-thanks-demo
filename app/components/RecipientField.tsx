@@ -67,7 +67,7 @@ export function RecipientField({ onBlur }: RecipientFieldProps) {
             </div>
           ) : (
             <p className="text-sm text-gray-500">
-              If sending to an ENS name, it must be a{' '}
+              Wallet address or{' '}
               <a
                 href="https://www.base.org/names"
                 target="_blank"

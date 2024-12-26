@@ -12,7 +12,6 @@ export function Balance() {
       const nullableBalance = await getThnxBalance({ address });
       if (nullableBalance !== null) {
         const balanceNumber = Number(nullableBalance);
-        console.log(balanceNumber);
         if (balanceNumber === 0) {
           setBalance(0);
         } else {

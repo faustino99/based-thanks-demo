@@ -1,3 +1,5 @@
+// test contract
+// export const contractAddress = '0xD95A71f6c628B17571CB72723770E8bDa822Aa3F';
 export const contractAddress = '0xe0436062c2F0c3483D13451fD947783106e3dC74';
 export const contractAbi = [
   {

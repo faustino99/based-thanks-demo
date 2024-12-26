@@ -17,6 +17,8 @@ export const SmartWalletOnlyContext = createContext<{
   setSmartWalletOnly: () => {},
 });
 
+const defaultQueryClient = new QueryClient();
+
 export function SmartWalletOnlyProvider({ children }: { children: ReactNode }) {
   const [smartWalletOnly, setSmartWalletOnly] = useState(false);
 
@@ -31,7 +33,6 @@ export function SmartWalletOnlyProvider({ children }: { children: ReactNode }) {
 
 export function Providers({ children }: { children: ReactNode }) {
   const { smartWalletOnly } = useContext(SmartWalletOnlyContext);
-  const defaultQueryClient = new QueryClient();
 
   return (
     <WagmiProvider

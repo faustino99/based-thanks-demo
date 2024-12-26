@@ -11,6 +11,7 @@ import {
   ConnectWalletText,
   Wallet,
 } from '@coinbase/onchainkit/wallet';
+import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
@@ -31,6 +32,7 @@ export function SubmitButton({
   confirmed,
 }: SubmitButtonProps) {
   const { isConnected, address } = useAccount();
+  const router = useRouter();
 
   const [transactionError, setTransactionError] = useState('');
 
@@ -62,7 +64,16 @@ export function SubmitButton({
             calls={getSendPraiseCallOnSubmit}
             isSponsored
           >
-            <TransactionButton text="Give thanks" disabled={!isSubmittable} />
+            <TransactionButton
+              text="Give thanks"
+              disabled={!isSubmittable}
+              successOverride={{
+                text: 'View praise',
+                onClick: () => {
+                  router.push('/view-thanks');
+                },
+              }}
+            />
             <TransactionStatus>
               {transactionError ? (
                 <p className="text-sm text-red-400">{transactionError}</p>

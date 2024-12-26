@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const defaultOptionLabel = 'Select an amount..';
 const optionLabelToAmount = {
-  '🙏 – ex: helped me carry groceries': 1,
+  '🙏 – ex: gave me great advice': 1,
   '🙏🙏 - ex: helped me debug my code': 2,
   '🙏🙏🙏 - ex: mentored me on an important project': 3,
 };
@@ -63,10 +63,6 @@ export function AmountDropdown({ amount, setAmount }: AmountDropdownProps) {
           </div>
         )}
       </div>
-      <p className="text-sm text-gray-400 dark:text-gray-500">
-        This is newly minted $THNX that will <b>not</b> be taken out of your
-        wallet
-      </p>
     </div>
   );
 }
