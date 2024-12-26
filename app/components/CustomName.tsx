@@ -39,7 +39,7 @@ export function CustomName({
     >
       <div className="flex items-center gap-2">
         <span className="inline-block max-w-[215px] cursor-text select-all truncate p-0 font-bold dark:text-white">
-          {isLoading ? 'Checking for Basename...' : name}
+          {isLoading ? 'Loading...' : name}
         </span>
         <button
           onClick={copyToClipboard}
