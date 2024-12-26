@@ -35,7 +35,7 @@ export function TransactionCountDropdown({
   }, []);
 
   return (
-    <div className="flex flex-col space-y-1" ref={dropdownRef}>
+    <div className="flex flex-col space-y-2" ref={dropdownRef}>
       <label
         htmlFor="transactionCount"
         className="block text-sm font-medium text-gray-700 dark:text-gray-300"

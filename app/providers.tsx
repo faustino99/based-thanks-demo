@@ -1,11 +1,9 @@
 'use client';
 
 import { OnchainKitProvider } from '@coinbase/onchainkit';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { type ReactNode, createContext, useContext, useState } from 'react';
-import { createConfig, http } from 'wagmi';
-import { WagmiProvider } from 'wagmi';
+import { createConfig, http, WagmiProvider } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
 import { coinbaseWallet } from 'wagmi/connectors';
 
