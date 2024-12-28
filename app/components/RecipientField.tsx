@@ -79,7 +79,7 @@ export function RecipientField({ onBlur }: RecipientFieldProps) {
             </p>
           )}
           {hasValidationError && (
-            <p className="text-sm text-red-500">
+            <p className="text-sm text-red-800">
               Invalid recipient address or ENS name.
             </p>
           )}

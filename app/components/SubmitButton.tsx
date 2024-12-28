@@ -76,7 +76,7 @@ export function SubmitButton({
             />
             <TransactionStatus>
               {transactionError ? (
-                <p className="text-sm text-red-400">{transactionError}</p>
+                <p className="text-sm text-red-800">{transactionError}</p>
               ) : (
                 <TransactionStatusLabel />
               )}
